@@ -25,7 +25,7 @@ class OrderType(DjangoObjectType):
         fields = "__all__"
 
 class CreateCustomer(graphene.Mutation):
-    customer = Field(CustomerType)
+    customer = graphene.Field(CustomerType)
     message = graphene.string()
     success = graphene.Boolean()
 
