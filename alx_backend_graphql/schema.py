@@ -4,8 +4,11 @@ from crm.schema import CRMQuery, Query as BaseQuery, Mutation
 class Query(CRMQuery, BaseQuery, graphene.ObjectType):
     pass
 
+class MainQuery(BaseQuery, graphene.ObjectType):
+    pass
+
 class Mutation(Mutation, graphene.ObjectType):
     pass
 
 
-schema = graphene.Schema(query=Query, mutation=Mutation)
+schema = graphene.Schema(query=MainQuery, mutation=Mutation)
