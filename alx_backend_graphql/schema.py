@@ -1,7 +1,11 @@
 import graphene
-from crm.schema import CRMQuery
+from crm.schema import CRMQuery, BaseQuery, Mutation
 
-class Query(CRMQuery, graphene.ObjectType):
+class Query(CRMQuery, BaseQuery, graphene.ObjectType):
     pass
 
-schema = graphene.Schema(query=Query)
+class Mutation(Mutation, graphene.ObjectType):
+    pass
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
