@@ -1,9 +1,11 @@
 import graphene
 from graphene import List, Field
+from graphene_django.filter import DjangoFilterConnectionField
 from django.db import transaction
 from .models import Customer, Product, Order
 from django.core.exceptions import ValidationError
 from .types import CustomerType, ProductType, OrderType
+from .filters import CustomerFilter, ProductFilter, OrderFilter
 
 
 # class CustomerType(DjangoObjectType):
@@ -134,19 +136,31 @@ class CreateOrder(graphene.Mutation):
 
         return CreateOrder(order=order)
 
+
+class OrderByInput(graphene.InputObjectType):
+    field = graphene.String(required=True)
+    direction = graphene.String(required=True)  # asc | desc
+
+
 class Query(graphene.ObjectType):
-    all_customers = graphene.List(CustomerType)
-    products = List(ProductType)
-    orders = List(OrderType)
+    #all_customers = graphene.List(CustomerType)
+    all_customers = DjangoFilterConnectionField(
+        CustomerType,
+        filterset_class=CustomerFilter,
+        order_by=OrderByInput()
+    )
 
-    def resolve_all_customers(self, info):
-        return Customer.objects.all()
+    all_products = DjangoFilterConnectionField(
+        ProductType,
+        filterset_class=ProductFilter,
+        order_by=OrderByInput()
+    )
 
-    def resolve_products(self, info):
-        return Product.objects.all()
-
-    def resolve_orders(self, info):
-        return Order.objects.all()
+    all_orders = DjangoFilterConnectionField(
+        OrderType,
+        filterset_class=OrderFilter,
+        order_by=OrderByInput()
+    )
 
 
 class Mutation(graphene.ObjectType):
