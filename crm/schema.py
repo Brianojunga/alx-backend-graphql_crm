@@ -1,35 +1,20 @@
 import graphene
-import re
 from graphene import List, Field
-from graphene_django import DjangoObjectType
 from django.db import transaction
 from .models import Customer, Product, Order
 from django.core.exceptions import ValidationError
+from .types import CustomerType, ProductType, OrderType
 
 class CRMQuery(graphene.ObjectType):
     hello = graphene.String(default_value = 'Hello, GraphQl')
 
-class CustomerType(DjangoObjectType):
-    class Meta:
-        model = Customer
-        fields = ("id", "name", "email", "phone")
-
-class ProductType(DjangoObjectType):
-    class Meta:
-        model = Product
-        fields ='__all__'
-
-class OrderType(DjangoObjectType):
-    class Meta:
-        model = Order
-        fields = "__all__"
 
 class CreateCustomer(graphene.Mutation):
     customer = graphene.Field(CustomerType)
-    message = graphene.string()
+    message = graphene.String()
     success = graphene.Boolean()
 
-    class Arguements:
+    class Arguments:
         name = graphene.String(required=True)
         email = graphene.String(required=True)
         phone = graphene.String(required=False)
@@ -38,11 +23,13 @@ class CreateCustomer(graphene.Mutation):
         if Customer.objects.filter(email=email).exists():
             raise ValidationError('Email already exists.')
 
-        customer = Customer.objects.create(
+        customer = Customer(
             name=name,
             email=email,
             phone=phone
         )
+        customer.save()
+
         return CreateCustomer(
             customer=customer,
             message="Customer created successfully.",
