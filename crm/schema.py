@@ -141,12 +141,12 @@ class CreateOrder(graphene.Mutation):
 
         return CreateOrder(order=order)
 
-class BaseQuery(graphene.ObjectType):
-    customers = List(CustomerType)
+class Query(graphene.ObjectType):
+    all_customers = graphene.List(CustomerType)
     products = List(ProductType)
     orders = List(OrderType)
 
-    def resolve_customers(self, info):
+    def resolve_all_customers(self, info):
         return Customer.objects.all()
 
     def resolve_products(self, info):
