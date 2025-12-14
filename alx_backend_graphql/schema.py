@@ -1,7 +1,7 @@
 import graphene
 from crm.schema import CRMQuery, Query as BaseQuery, Mutation
 
-class Query(CRMQuery, BaseQuery, graphene.ObjectType):
+class Query(CRMQuery, graphene.ObjectType):
     pass
 
 class MainQuery(BaseQuery, graphene.ObjectType):
