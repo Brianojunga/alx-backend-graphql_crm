@@ -5,6 +5,12 @@ from .models import Customer, Product, Order
 from django.core.exceptions import ValidationError
 from .types import CustomerType, ProductType, OrderType
 
+
+# class CustomerType(DjangoObjectType):
+#     class Meta:
+#         model = Customer
+#         fields = ("id", "name", "email", "phone")
+
 class CRMQuery(graphene.ObjectType):
     hello = graphene.String(default_value = 'Hello, GraphQl')
 
